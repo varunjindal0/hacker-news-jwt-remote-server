@@ -8,7 +8,8 @@ const mongoose = require('mongoose');
 // Instantiating the express app
 const app = express();
 
-// For CORS sake
+
+// See the react auth blog in which cors is required for access
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Headers', 'Content-type,Authorization');
@@ -111,13 +112,13 @@ app.post('/register', (req, res)=>{
                 if(!req.body.password===req.body.confirmpassword){
                     res.send("Passwords does not match!!")
                 } else {
-                    newUser.save(function(err){
+                    newUser.save(function(err, savedUser){
                         if(err){
                             console.log("Error saving in database!")
                             res.send(err);
                         } else {
-                            console.log("User successfully registered!!");
-                            let token = jwt.sign({username: user.username, user_db_id: user._id}, 'my secret', { expiresIn: 129600 })
+                            console.log("User successfully registered!!"+ user.username + user._id);
+                            let token = jwt.sign({username: savedUser.username, user_db_id: savedUser._id}, 'my secret', { expiresIn: 129600 })
                             res.json({
                                 success: true,
                                 err: null,
@@ -234,7 +235,9 @@ app.use(function (err, req, res, next) {
     }
 });
 
+// Starting the app on PORT 3000
 const PORT = 8080;
 app.listen(PORT, () => {
+    // eslint-disable-next-line
     console.log(`Magic happens on port ${PORT}`);
 });
