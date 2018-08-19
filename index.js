@@ -1,15 +1,4 @@
-/**
- * To get started install
- * express bodyparser jsonwebtoken express-jwt
- * via npm
- * command :-
- * npm install express bodyparser jsonwebtoken express-jwt --save
- */
 
-// https://hptechblogs.com/using-json-web-token-for-authentication/
-
-
-// Bringing all the dependencies in
 const express = require('express');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
@@ -19,8 +8,7 @@ const mongoose = require('mongoose');
 // Instantiating the express app
 const app = express();
 
-
-// See the react auth blog in which cors is required for access
+// For CORS sake
 app.use((req, res, next) => {
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Headers', 'Content-type,Authorization');
@@ -246,9 +234,7 @@ app.use(function (err, req, res, next) {
     }
 });
 
-// Starting the app on PORT 3000
 const PORT = 8080;
 app.listen(PORT, () => {
-    // eslint-disable-next-line
     console.log(`Magic happens on port ${PORT}`);
 });
