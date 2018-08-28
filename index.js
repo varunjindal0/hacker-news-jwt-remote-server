@@ -1,12 +1,4 @@
-/**
- * To get started install
- * express bodyparser jsonwebtoken express-jwt
- * via npm
- * command :-
- * npm install express bodyparser jsonwebtoken express-jwt --save
- */
 
-// https://hptechblogs.com/using-json-web-token-for-authentication/
 
 
 // Bringing all the dependencies in
