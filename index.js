@@ -33,7 +33,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // INstantiating the express-jwt middleware
 const jwtMW = exjwt({
-    secret: 'keyboard cat 4 ever'
+    secret: 'my secret'
 });
 
 
@@ -123,13 +123,13 @@ app.post('/register', (req, res)=>{
                 if(!req.body.password===req.body.confirmpassword){
                     res.send("Passwords does not match!!")
                 } else {
-                    newUser.save(function(err){
+                    newUser.save(function(err, savedUser){
                         if(err){
                             console.log("Error saving in database!")
                             res.send(err);
                         } else {
-                            console.log("User successfully registered!!");
-                            let token = jwt.sign({username: user.username, user_db_id: user._id}, 'my secret', { expiresIn: 129600 })
+                            console.log("User successfully registered!!"+ user.username + user._id);
+                            let token = jwt.sign({username: savedUser.username, user_db_id: savedUser._id}, 'my secret', { expiresIn: 129600 })
                             res.json({
                                 success: true,
                                 err: null,
@@ -148,7 +148,7 @@ app.post('/register', (req, res)=>{
 
 //************************************************* */
 
-app.post('/upvote',(req, res)=>{
+app.post('/upvote', jwtMW ,(req, res)=>{
     let upVoteWeight = '50'
     console.log(req.body.postId);
     console.log('user_db_id: '+req.body.user_db_id)
@@ -224,8 +224,9 @@ app.get('/', jwtMW /* Using the express jwt MW here */, (req, res) => {
     res.send('You are authenticated'); //Sending some response when authenticated
 });
 
-app.get('/:user_db_id/voted', (req,res)=>{
+app.get('/:user_db_id/voted', jwtMW, (req,res)=>{
     console.log("Fetching all the posts liked by this userID: "+ req.params.user_db_id);
+    console.log("jwt info: "+req.user)
     let arr = [];
     User.findOne({_id: req.params.user_db_id}, function(err, user){
         if(err){
@@ -246,7 +247,7 @@ app.use(function (err, req, res, next) {
     }
 });
 
-// Starting the app on PORT 3000
+// Starting the app on PORT 8080
 const PORT = 8080;
 app.listen(PORT, () => {
     // eslint-disable-next-line
