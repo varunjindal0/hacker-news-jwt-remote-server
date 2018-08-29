@@ -109,7 +109,7 @@ app.post('/register', (req, res)=>{
         } else {
             console.log(user)
             if(user.length===0){
-                if(!req.body.password===req.body.confirmpassword){
+                if(!(req.body.password===req.body.confirmpassword)){
                     res.send("Passwords does not match!!")
                 } else {
                     newUser.save(function(err, savedUser){
